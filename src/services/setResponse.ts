@@ -11,7 +11,5 @@ export const setResponse = ({
   headers?: OutgoingHttpHeaders;
   resp: ServerResponse;
 }) => {
-  //   resp.statusCode=code;
-  // resp.setHeaders
   resp.writeHead(code, headers).end(body);
 };

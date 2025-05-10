@@ -1,5 +1,6 @@
 import type { IncomingMessage } from "node:http";
 import { User } from "../types";
+import { validateBody } from "../utils/validateBody";
 
 export const getBody = (req: IncomingMessage) => {
   return new Promise<Exclude<User, "id">>((res, rej) => {
@@ -9,11 +10,18 @@ export const getBody = (req: IncomingMessage) => {
       body += chunk;
     });
     req.on("end", () => {
-      const parsedBody = JSON.parse(body) as Exclude<User, "id">;
-      if (!parsedBody.age || !parsedBody.username || !parsedBody.hobbies) {
-        rej(new BodyError());
+      try {
+        if (!body) {
+          rej(new BodyError());
+        }
+        const parsedBody = JSON.parse(body) as Exclude<User, "id">;
+        if (!validateBody(parsedBody)) {
+          rej(new BodyError());
+        }
+        res(parsedBody);
+      } catch {
+        rej();
       }
-      res(parsedBody);
     });
     req.on("error", rej);
   });

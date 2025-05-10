@@ -30,7 +30,8 @@ class Users {
     if (userIndex === -1) {
       throw new NotFoundError();
     }
-    this.users[userIndex] = { ...this.users[userIndex], ...user };
+    this.users[userIndex] = { ...user, id: this.users[userIndex].id };
+    return this.users[userIndex];
   }
   private userIndex(id: string) {
     return this.users.findIndex((user) => user.id === id);
