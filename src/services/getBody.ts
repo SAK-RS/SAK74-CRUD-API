@@ -3,7 +3,7 @@ import { User } from "../types";
 import { validateBody } from "../utils/validateBody";
 
 export const getBody = (req: IncomingMessage) => {
-  return new Promise<Exclude<User, "id">>((res, rej) => {
+  return new Promise<Omit<User, "id">>((res, rej) => {
     // throw Error("uuuuuuups");
     let body = "";
     req.on("data", (chunk) => {
@@ -14,7 +14,7 @@ export const getBody = (req: IncomingMessage) => {
         if (!body) {
           rej(new BodyError());
         }
-        const parsedBody = JSON.parse(body) as Exclude<User, "id">;
+        const parsedBody = JSON.parse(body) as Omit<User, "id">;
         if (!validateBody(parsedBody)) {
           rej(new BodyError());
         }

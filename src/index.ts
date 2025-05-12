@@ -1,10 +1,7 @@
-import { createServer } from "node:http";
-import { serverListener } from "./server";
-
-const PORT = process.env.PORT || 3000;
+import { server } from "./server";
+import { PORT } from "../_setup";
 
 try {
-  const server = createServer(serverListener);
   server.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
   });

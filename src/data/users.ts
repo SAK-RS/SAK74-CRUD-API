@@ -13,7 +13,7 @@ class Users {
     }
     return user;
   }
-  addUser(user: Exclude<User, "id">) {
+  addUser(user: Omit<User, "id">) {
     const id = randomUUID();
     this.users.push({ ...user, id });
     return this.getUserById(id);
@@ -25,7 +25,7 @@ class Users {
     }
     this.users.splice(userIndex, 1);
   }
-  updateUser(id: string, user: Exclude<User, "id">) {
+  updateUser(id: string, user: Omit<User, "id">) {
     const userIndex = this.userIndex(id);
     if (userIndex === -1) {
       throw new NotFoundError();

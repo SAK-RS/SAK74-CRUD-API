@@ -1,6 +1,6 @@
 import { User } from "../types";
 
-export const validateBody = (body: Exclude<User, "id">) => {
+export const validateBody = (body: Omit<User, "id">) => {
   const { username, age, hobbies } = body;
   if (
     !age ||

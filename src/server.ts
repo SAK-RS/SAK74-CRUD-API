@@ -1,4 +1,4 @@
-import type { RequestListener } from "node:http";
+import { createServer, type RequestListener } from "node:http";
 import { handleError } from "./services/handleError";
 import { getHandler } from "./methods/get.handler";
 import { postHandler } from "./methods/post.handler";
@@ -24,6 +24,8 @@ export const serverListener: RequestListener = (req, res) => {
     handleError(500, "Server error!", res);
   }
 };
+
+export const server = createServer(serverListener);
 
 const methods = ["GET", "POST", "PUT", "DELETE"] as const;
 const handlers: { [k in (typeof methods)[number]]: RequestListener } = {
