@@ -7,7 +7,7 @@
   "type": "module",
   "exports": "./dist/index.mjs",
   "scripts": {
-    "test": "tsx --test --env-file=.env",
+    "test": "tsx --test --env-file=.env --experimental-test-coverage",
     "test:watch": "tsx --test --watch --env-file=.env",
     "start:dev": "tsx --watch --env-file=.env src",
     "start:multi": "tsx --env-file=.env src --multi",

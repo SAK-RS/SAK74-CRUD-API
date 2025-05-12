@@ -92,4 +92,20 @@ describe("API testing", () => {
     });
     assert.strictEqual(res.status, 404);
   });
+
+  test("GET /api/users/{id} wrong uuid", async () => {
+    const res = await makeRequest({
+      path: `/api/users/asd`,
+      method: "GET",
+    });
+    assert.strictEqual(res.status, 400);
+  });
+
+  test("GET /api/users/{id} not existing user", async () => {
+    const res = await makeRequest({
+      path: `/api/users/21fab6b9-0f7e-476c-b7ea-aed2369aa4c0`,
+      method: "GET",
+    });
+    assert.strictEqual(res.status, 404);
+  });
 });
