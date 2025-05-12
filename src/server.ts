@@ -7,7 +7,7 @@ import { deleteHandler } from "./methods/delete.handler";
 import cluster from "node:cluster";
 import { env } from "node:process";
 
-export const serverListener: RequestListener = (req, res) => {
+export const serverListener: RequestListener = async (req, res) => {
   if (cluster.isWorker) {
     console.log(
       `Request handling by worker ${process.pid} on port ${env.WORKER_PORT}`
@@ -26,7 +26,7 @@ export const serverListener: RequestListener = (req, res) => {
       handleError(405, "Method not allowed!", res);
       return;
     }
-    handlers[req.method](req, res);
+    await handlers[req.method](req, res);
   } catch {
     handleError(500, "Server error!", res);
   }

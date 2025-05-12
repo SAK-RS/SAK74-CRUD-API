@@ -5,6 +5,7 @@ import cluster from "node:cluster";
 import { availableParallelism } from "node:os";
 import { createServer } from "node:http";
 import { request, type RequestOptions } from "node:http";
+import { msgHandler } from "./utils/msgHandler";
 
 const {
   values: { multi },
@@ -18,6 +19,8 @@ if (!multi) {
   start();
 } else {
   if (cluster.isPrimary) {
+    cluster.on("message", msgHandler);
+
     const workerPorts: number[] = [];
     for (let i = 0; i < availableParallelism() - 1; i += 1) {
       const workerPort = PORT + i + 1;

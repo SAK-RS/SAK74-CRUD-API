@@ -5,6 +5,7 @@ import { handleError } from "../services/handleError";
 import data, { NotFoundError } from "../data/users";
 import { getId } from "../services/getId";
 import { validate } from "uuid";
+import cluster from "node:cluster";
 
 export const putHandler: RequestListener = async (req, resp) => {
   try {
@@ -14,12 +15,34 @@ export const putHandler: RequestListener = async (req, resp) => {
       return;
     }
     const body = await getBody(req);
-    setResponse({
-      code: 200,
-      resp,
-      body: JSON.stringify(data.updateUser(id, body)),
-      headers: { "content-type": "application/json" },
-    });
+    if (cluster.isWorker) {
+      process.send && process.send({ action: "updateUser", id, user: body });
+      process.once("message", (msg) => {
+        if ("error" in (msg as {})) {
+          const notExist =
+            (msg as { cause: string }).cause === new NotFoundError().message;
+          handleError(
+            notExist ? 404 : 500,
+            (msg as { cause: string }).cause,
+            resp
+          );
+        } else {
+          setResponse({
+            code: 200,
+            resp,
+            body: JSON.stringify(msg),
+            headers: { "content-type": "application/json" },
+          });
+        }
+      });
+    } else {
+      setResponse({
+        code: 200,
+        resp,
+        body: JSON.stringify(data.updateUser(id, body)),
+        headers: { "content-type": "application/json" },
+      });
+    }
   } catch (err) {
     const isBodyError = err instanceof BodyError;
     const notExist = err instanceof NotFoundError;
