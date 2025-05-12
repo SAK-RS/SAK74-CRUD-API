@@ -4,8 +4,15 @@ import { getHandler } from "./methods/get.handler";
 import { postHandler } from "./methods/post.handler";
 import { putHandler } from "./methods/put.handler";
 import { deleteHandler } from "./methods/delete.handler";
+import cluster from "node:cluster";
+import { env } from "node:process";
 
 export const serverListener: RequestListener = (req, res) => {
+  if (cluster.isWorker) {
+    console.log(
+      `Request handling by worker ${process.pid} on port ${env.WORKER_PORT}`
+    );
+  }
   try {
     req.on("error", (err) => {
       handleError(400, err.message, res);

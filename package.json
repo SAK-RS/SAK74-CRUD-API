@@ -10,6 +10,7 @@
     "test": "tsx --test --env-file=.env",
     "test:watch": "tsx --test --watch --env-file=.env",
     "start:dev": "tsx --watch --env-file=.env src",
+    "start:multi": "tsx --watch --env-file=.env src --multi",
     "build": "pkgroll -m",
     "start:prod": "npm run build && node --env-file=.env dist/index.mjs"
   },
